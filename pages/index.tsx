@@ -451,11 +451,18 @@ export default function Dashboard() {
                 // Get current config
                 const { data: current } = await api.get('/prefs')
 
+                const now = new Date()
+                const currentHour = now.getHours()
+                const decafStartHour = parseInt(current.decafStartHour, 10)
+                const isDecafTime = !isNaN(decafStartHour) && currentHour >= decafStartHour
+                const targetKey = isDecafTime ? 'decafPreset' : 'regularPreset'
+                const presetName = isDecafTime ? 'Decaf Preset' : 'Regular Preset'
+
                 const formData = new FormData()
                 
                 Object.entries(current).forEach(([key, value]) => {
-                    // If this is the regularPreset field update it
-                    if (key === 'regularPreset') {
+                    // If this is the target field update it
+                    if (key === targetKey) {
                         formData.append(key, targetWeight.toString())
                     } 
                     // Otherwise, pass the existing value through untouched
@@ -466,10 +473,11 @@ export default function Dashboard() {
 
                 // Send it back
                 await api.post('/prefs', formData)
+                return presetName
             },
             {
                 loading: 'Updating preset...',
-                success: `Saved ${targetWeight}g as Regular Preset`,
+                success: (presetName) => `Saved ${targetWeight}g as ${presetName}`,
                 error: 'Failed to save preset',
             }
         )
@@ -688,7 +696,7 @@ export default function Dashboard() {
                                         onClick={handleSaveDefault}
                                         className='h-auto py-1 px-3 mt-2 text-xs text-muted-foreground hover:text-primary font-normal'
                                     >
-                                        Save as Regular Preset
+                                        Save as Preset
                                     </Button>
 
 								</div>
