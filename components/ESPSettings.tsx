@@ -144,6 +144,8 @@ export default function ESPSettings() {
 			learningRate: 0.5,
 			systemLag: 1,
 			earlyStop: false,
+			swapButtons: false,
+			halfForTwoCup: true,
 		},
 	})
 
@@ -177,6 +179,8 @@ export default function ESPSettings() {
 			formData.append('learningRate', data.learningRate.toString())
 			formData.append('systemLag', data.systemLag.toString())
 			formData.append('earlyStop', data.earlyStop.toString())
+			formData.append('swapButtons', data.swapButtons.toString())
+			formData.append('halfForTwoCup', data.halfForTwoCup.toString())
 
 			await api.post('/prefs', formData)
 
@@ -478,6 +482,53 @@ export default function ESPSettings() {
 							<p className='text-xs text-muted-foreground w-[80%]'>
 								Ends the drip phase early if weight hasn&apos;t increased by
 								0.1g in 2 seconds.
+							</p>
+						</div>
+
+						<div className='flex flex-col gap-1'>
+							<div className='flex items-center justify-between'>
+								<Label
+									htmlFor='swapButtons'
+									className='font-medium text-base'
+								>
+									Swap 1-Cup & 2-Cup Buttons
+								</Label>
+								<Controller
+									name='swapButtons'
+									control={form.control}
+									render={({ field }) => (
+										<Switch
+											id='swapButtons'
+											checked={field.value}
+											onCheckedChange={field.onChange}
+										/>
+									)}
+								/>
+							</div>
+							<p className='text-xs text-muted-foreground w-[80%]'>
+								Swaps the functions of the volumetric and wake buttons.
+							</p>
+						</div>
+
+						<div className='flex flex-col gap-1'>
+							<div className='flex items-center justify-between'>
+								<Label htmlFor='halfForTwoCup' className='font-medium text-base'>
+									Use Half Weight for Volumetric Brew
+								</Label>
+								<Controller
+									name='halfForTwoCup'
+									control={form.control}
+									render={({ field }) => (
+										<Switch
+											id='halfForTwoCup'
+											checked={field.value}
+											onCheckedChange={field.onChange}
+										/>
+									)}
+								/>
+							</div>
+							<p className='text-xs text-muted-foreground w-[80%]'>
+								The volumetric brew button will use half of the preset weight.
 							</p>
 						</div>
 
